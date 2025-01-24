@@ -171,7 +171,7 @@ mod tests {
     fn test_process_text_verify() -> Result<()> {
         let mut reader = "hello".as_bytes();
         let format = TextSignFormat::Blake3;
-        let sig = "33Ypo4rveYpWmJKAiGnnse-wHQhMVujjmcVkV4Tl43k";
+        let sig = "RSMNmsm3xe6J6AiKhDlAenCAXg5vrCm_S6REDK-qTIJ1KG3U9JFFTsJ9fHVPXkTbKzycpAAemgF_TgYSy8p5Cw";
         let sig = URL_SAFE_NO_PAD.decode(sig)?;
         let ret = process_text_verify(&mut reader, KEY, &sig, format)?;
         assert!(ret);
