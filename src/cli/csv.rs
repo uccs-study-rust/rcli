@@ -1,28 +1,29 @@
-use std::{fmt, str::FromStr};
-
+use super::verify_file;
 use clap::Parser;
-
-use super::verify_input_file;
+use std::{fmt, str::FromStr};
 
 #[derive(Debug, Clone, Copy)]
 pub enum OutputFormat {
     Json,
     Yaml,
-    // Toml,
 }
 
-#[derive(Parser, Debug)]
+#[derive(Debug, Parser)]
 pub struct CsvOpts {
-    #[arg(short, long, value_parser = verify_input_file)]
+    #[arg(short, long, value_parser = verify_file)]
     pub input: String,
-    #[arg(short, long)]
+
+    #[arg(short, long)] // "output.json".into()
     pub output: Option<String>,
+
+    #[arg(long, value_parser = parse_format, default_value = "json")]
+    pub format: OutputFormat,
+
     #[arg(short, long, default_value_t = ',')]
     pub delimiter: char,
+
     #[arg(long, default_value_t = true)]
     pub header: bool,
-    #[arg( long, value_parser=parse_format,default_value = "json")]
-    pub format: OutputFormat,
 }
 
 fn parse_format(format: &str) -> Result<OutputFormat, anyhow::Error> {
@@ -34,7 +35,6 @@ impl From<OutputFormat> for &'static str {
         match format {
             OutputFormat::Json => "json",
             OutputFormat::Yaml => "yaml",
-            // OutputFormat::Toml => "toml",
         }
     }
 }
@@ -46,7 +46,6 @@ impl FromStr for OutputFormat {
         match s {
             "json" => Ok(OutputFormat::Json),
             "yaml" => Ok(OutputFormat::Yaml),
-            // "toml" => Ok(OutputFormat::Toml),
             _ => Err(anyhow::anyhow!("Invalid format")),
         }
     }
